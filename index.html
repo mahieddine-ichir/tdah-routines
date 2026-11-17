@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFF4E2">
+<meta name="description" content="Routines visuelles du matin et du soir avec minuteur, pour aider les enfants (TDAH ou non) à avancer une étape à la fois. Gratuit, sans compte, rien ne quitte votre appareil.">
+<title>Mes routines</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap">
+<style>
+:root{--bg:#FFF4E2;--ink:#231B12;--muted:#6B5742;--bord:#EFD9BE;--ok:#3F7A68;--sun:#F6B53C}
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;overflow-x:hidden}
+body{background:
+  radial-gradient(circle at 12% 8%,#FFE2B8 0 90px,transparent 91px),
+  radial-gradient(circle at 92% 22%,#E3E8F8 0 70px,transparent 71px),
+  radial-gradient(circle at 85% 92%,#DDEFE4 0 110px,transparent 111px),
+  var(--bg);
+  min-height:100vh}
+.w{position:relative;max-width:640px;margin:0 auto;padding:36px 16px 40px;display:flex;flex-direction:column;gap:18px}
+
+/* Décor */
+.deco{position:absolute;pointer-events:none;color:var(--sun);opacity:.9}
+.deco.d1{top:22px;right:20px;animation:float 5s ease-in-out infinite}
+.deco.d2{top:120px;right:84px;color:#9AA8DA;animation:float 6s ease-in-out -2s infinite}
+.deco.d3{top:6px;right:120px;color:#F19A6B;animation:float 7s ease-in-out -4s infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(10deg)}}
+
+.hello{font-size:20px;font-weight:900;color:var(--muted)}
+h1{margin:2px 0 0;font-size:44px;font-weight:900;line-height:1.02;text-wrap:balance;max-width:14ch}
+.wave{display:inline-block;transform-origin:70% 70%;animation:wave 2.4s ease-in-out 1s 2}
+@keyframes wave{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(16deg)}20%,40%{transform:rotate(-8deg)}}
+
+/* Cartes routine */
+.cards{display:flex;flex-direction:column;gap:16px;margin-top:6px}
+a.card{position:relative;display:flex;align-items:center;gap:18px;text-decoration:none;color:#fff;
+  padding:22px 22px;border-radius:28px;min-height:120px;overflow:hidden;
+  box-shadow:0 6px 0 var(--shadow);transition:transform .12s ease,box-shadow .12s ease}
+a.card:active{transform:translateY(5px);box-shadow:0 1px 0 var(--shadow)}
+a.card::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.12)}
+a.card.now{min-height:168px;padding:26px 24px}
+.pic{flex:0 0 auto;width:74px;height:74px;border-radius:24px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center}
+.now .pic{width:92px;height:92px;border-radius:28px}
+.now .pic svg{width:56px;height:56px;animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.ct{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:6px}
+.tag{align-self:flex-start;background:#fff;color:var(--accdark);font-size:13px;font-weight:900;letter-spacing:.6px;
+  text-transform:uppercase;padding:5px 10px;border-radius:999px}
+.nm{font-size:30px;font-weight:900;line-height:1.05}
+.now .nm{font-size:36px}
+.meta{font-size:16px;font-weight:800;opacity:.92}
+.go{flex:0 0 auto;width:52px;height:52px;border-radius:50%;background:#fff;color:var(--accdark);display:flex;align-items:center;justify-content:center}
+.dots{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
+.dots i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.3)}
+.dots i.on{background:#fff}
+.done-badge{display:inline-flex;align-items:center;gap:6px}
+
+.cheer{text-align:center;font-size:17px;font-weight:800;color:var(--muted);margin:4px 0 10px}
+
+/* Espace parents */
+.parents{margin-top:18px;border-top:2.5px dashed var(--bord);padding-top:18px;display:flex;flex-direction:column;gap:10px}
+.parents .sub{font-size:12px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:12px;background:#fff;border:2px solid var(--bord);
+  color:var(--ink);text-decoration:none;font-size:15px;font-weight:800}
+details{background:#fff;border:2px solid var(--bord);border-radius:14px;padding:12px 16px}
+summary{font-size:15px;font-weight:900;cursor:pointer}
+details p{margin:10px 0 0;font-size:15px;font-weight:700;line-height:1.5;color:#4a3d2e}
+
+.banner{background:#fff;border:3px solid var(--ok);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.banner p{margin:0;font-size:16px;font-weight:800;line-height:1.4}
+.banner .b{display:flex;gap:10px;flex-wrap:wrap}
+.banner button{font:900 16px Nunito,system-ui,sans-serif;padding:12px 18px;border-radius:12px;cursor:pointer;border:2px solid var(--ok)}
+.banner .yes{background:var(--ok);color:#fff}
+.banner .no{background:#fff;color:#35604F}
+.hidden{display:none}
+
+@media (max-width:460px){
+  h1{font-size:36px}
+  .nm{font-size:25px} .now .nm{font-size:30px}
+  .pic{width:60px;height:60px;border-radius:20px} .now .pic{width:76px;height:76px}
+  .go{width:44px;height:44px}
+  a.card{gap:14px;padding:18px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="w">
+  <svg class="deco d1" width="34" height="34" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.3 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.3 6.1-.7z"/></svg>
+  <svg class="deco d2" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.3 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.3 6.1-.7z"/></svg>
+  <svg class="deco d3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>
+
+  <div class="banner hidden" id="import">
+    <p>Ce lien contient des routines déjà préparées<span id="importName"></span>. Les utiliser sur cet appareil ? Les réglages actuels seront remplacés.</p>
+    <div class="b">
+      <button type="button" class="yes" id="importYes">Oui, les utiliser</button>
+      <button type="button" class="no" id="importNo">Non merci</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="hello" id="hello">&nbsp;</div>
+    <h1 id="h1">&nbsp;</h1>
+  </div>
+
+  <div class="cards" id="cards"></div>
+  <div class="cheer" id="cheer"></div>
+
+  <div class="parents">
+    <div class="sub">Pour les parents</div>
+    <div class="links" id="links"><a href="reglages.html">Personnaliser</a></div>
+    <details>
+      <summary>Comment ça marche ?</summary>
+      <p>Chaque routine montre <b>une seule étape à la fois</b> avec un minuteur visible. L'enfant appuie sur « Démarrer », puis sur « C'est fait » pour passer à la suite. C'est le chrono qui donne le rythme, pas l'adulte : moins de rappels, moins de conflits.</p>
+      <p>L'accueil met en avant la routine du moment (matin avant midi, soir ensuite) et montre où en est l'enfant aujourd'hui.</p>
+      <p>Dans <b>Personnaliser</b>, vous pouvez changer le prénom, les étapes, les durées, les icônes et les règles. Les <b>fiches A4</b> se mettent à jour toutes seules : imprimez-les et affichez-les là où la routine se passe.</p>
+      <p>Pour utiliser les mêmes routines sur un autre appareil, créez un <b>lien de partage</b> depuis la page Personnaliser.</p>
+      <p><b>Vie privée :</b> pas de compte, pas de serveur. Tout reste enregistré dans ce navigateur.</p>
+    </details>
+  </div>
+</div>
+<script src="common.js"></script>
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  var cfg = R.load();
+  var PIC = { matin: "soleil", soir: "lune" };
+  var ARROW = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+
+  function dayKey(d) { return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+
+  /* Même logique que routine.html : progression du jour, ignorée si les étapes ont changé. */
+  function progress(id) {
+    var tasks = cfg.routines[id].tasks;
+    var sig = tasks.map(function (t) { return t.label + "|" + t.mins; }).join(";");
+    try {
+      var s = JSON.parse(window.localStorage.getItem("routine-progress-" + id));
+      if (s && s.day === dayKey(new Date()) && s.sig === sig && Array.isArray(s.done)) {
+        return s.done.filter(Boolean).length;
+      }
+    } catch (e) {}
+    return 0;
+  }
+
+  function render() {
+    var h = new Date().getHours();
+    var current = h < 12 ? "matin" : "soir";
+    var hi = h < 12 ? "Bonjour" : (h < 18 ? "Coucou" : "Bonsoir");
+    $("hello").innerHTML = "";
+    var wave = document.createElement("span"); wave.className = "wave"; wave.textContent = "👋";
+    $("hello").appendChild(document.createTextNode(hi + (cfg.name ? " " + cfg.name : "") + " ! "));
+    $("hello").appendChild(wave);
+
+    var prog = {}, allDone = true;
+    cfg.order.forEach(function (id) { prog[id] = progress(id); });
+    var curDone = prog[current] === cfg.routines[current].tasks.length;
+    $("h1").textContent = curDone
+      ? (current === "matin" ? "Ta routine est finie, bravo !" : "Tout est fait, bravo !")
+      : (prog[current] > 0 ? "On continue ?" : (current === "matin" ? "Prêt·e pour la journée ?" : "C'est parti pour ce soir ?"));
+    document.title = cfg.name ? "Les routines de " + cfg.name : "Mes routines";
+
+    $("cards").innerHTML = ""; $("links").querySelectorAll(".sheet").forEach(function (n) { n.remove(); });
+    var order = cfg.order.slice().sort(function (a, b) { return (a === current ? -1 : 0) - (b === current ? -1 : 0); });
+    order.forEach(function (id) {
+      var rt = cfg.routines[id], th = R.THEMES[rt.theme];
+      var n = rt.tasks.length, d = prog[id], isNow = id === current;
+      var a = document.createElement("a");
+      a.className = "card" + (isNow ? " now" : "");
+      a.href = "routine.html?r=" + id;
+      a.style.background = th.acc;
+      a.style.setProperty("--shadow", th.accdark);
+      a.style.setProperty("--accdark", th.accdark);
+
+      var pic = document.createElement("span"); pic.className = "pic";
+      pic.innerHTML = R.svg(PIC[id] || rt.endIcon, isNow ? 56 : 42, 2.2);
+      a.appendChild(pic);
+
+      var ct = document.createElement("span"); ct.className = "ct";
+      if (isNow) {
+        var tag = document.createElement("span"); tag.className = "tag";
+        tag.textContent = d === n ? "Fini !" : "C'est maintenant";
+        ct.appendChild(tag);
+      }
+      var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = rt.short; ct.appendChild(nm);
+      var meta = document.createElement("span"); meta.className = "meta";
+      meta.textContent = d === n ? "★ Tout est fait !" : (d > 0 ? d + " étape" + (d > 1 ? "s" : "") + " sur " + n : n + " étapes · " + R.total(rt.tasks));
+      ct.appendChild(meta);
+      if (d > 0 && d < n && n <= 15) {
+        var dots = document.createElement("span"); dots.className = "dots";
+        for (var i = 0; i < n; i++) { var dot = document.createElement("i"); if (i < d) { dot.className = "on"; } dots.appendChild(dot); }
+        ct.appendChild(dots);
+      }
+      a.appendChild(ct);
+
+      var go = document.createElement("span"); go.className = "go"; go.innerHTML = ARROW; a.appendChild(go);
+      a.setAttribute("aria-label", rt.short + ", " + meta.textContent);
+      $("cards").appendChild(a);
+
+      var p = document.createElement("a");
+      p.className = "sheet"; p.href = "fiche.html?r=" + id;
+      p.textContent = "Fiche A4 — " + rt.short.toLowerCase();
+      $("links").appendChild(p);
+      if (d < n) { allDone = false; }
+    });
+
+    $("cheer").textContent = allDone ? "Matin et soir : tout est fait aujourd'hui. Champion·ne ! 🌟" : "Une étape à la fois, tu vas y arriver ✨";
+  }
+  render();
+
+  /* Import depuis un lien de partage : index.html#config=... */
+  var m = window.location.hash.match(/[#&]config=([A-Za-z0-9_-]+)/);
+  if (m) {
+    var incoming = R.decode(m[1]);
+    if (incoming) {
+      $("importName").textContent = incoming.name ? " pour " + incoming.name : "";
+      $("import").classList.remove("hidden");
+    }
+    var clear = function () {
+      $("import").classList.add("hidden");
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    };
+    $("importYes").addEventListener("click", function () {
+      cfg = incoming; R.save(cfg); clear(); render();
+    });
+    $("importNo").addEventListener("click", clear);
+  }
+
+  /* Revenir sur l'onglet met à jour l'avancement et la routine du moment. */
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) { render(); } });
+  window.addEventListener("pageshow", function (e) { if (e.persisted) { cfg = R.load(); render(); } });
+})();
+</script>
+</body>
+</html>

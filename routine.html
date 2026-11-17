@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FFF8EE">
+<title>Routine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap">
+<style>
+:root{
+  --bg:#FFF8EE; --ink:#231B12; --acc:#B04E0C; --accdark:#8A3D08;
+  --muted:#6B5742; --tint:#FDEBD8; --bord:#EFD9BE; --track:#F2DFC7;
+  --soft:#E0BE94; --donetxt:#8A7560; --donecirc:#3F7A68; --donebadge:#35604F;
+}
+*{-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:820px;margin:0 auto;padding:18px 16px calc(36px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:16px}
+.back{align-self:flex-start;font-size:15px;font-weight:800;color:var(--muted);text-decoration:none;padding:6px 0}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--acc)}
+h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:balance}
+.clockbox{text-align:right}
+.clocklbl{font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.clock{font-size:38px;font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums}
+.progline{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.progline .a{font-size:15px;font-weight:800;color:var(--muted)}
+.progline .b{font-size:15px;font-weight:800;color:var(--accdark)}
+.bar{margin-top:8px;height:14px;border-radius:999px;background:var(--track);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--acc);border-radius:999px;transition:width .3s ease}
+.list{display:flex;flex-direction:column;gap:10px}
+.row{width:100%;box-sizing:border-box;display:flex;align-items:center;gap:16px;min-height:92px;
+  padding:14px 18px;border-radius:18px;background:#fff;border:2px solid var(--bord);
+  color:var(--ink);text-align:left;font-family:inherit;cursor:pointer}
+.row.active{background:var(--tint);border:3px solid var(--acc)}
+.row.done{color:var(--donetxt)}
+.circ{flex:0 0 auto;width:48px;height:48px;border-radius:999px;display:flex;align-items:center;
+  justify-content:center;background:var(--track);color:var(--accdark);font-size:20px;font-weight:900}
+.row.active .circ{background:var(--acc);color:#fff}
+.row.done .circ{background:var(--donecirc);color:#fff}
+.mid{flex:1 1 auto;min-width:0}
+.lbl{display:block;font-size:23px;font-weight:800;line-height:1.2}
+.det{display:block;margin-top:2px;font-size:14px;font-weight:700;color:var(--muted)}
+.badge{flex:0 0 auto;min-width:76px;text-align:center;font-size:18px;font-weight:900;
+  font-variant-numeric:tabular-nums;color:var(--accdark)}
+.row.active .badge{font-size:26px}
+.row.done .badge{color:var(--donebadge)}
+.panel{background:#fff;border:3px solid var(--acc);border-radius:22px;padding:22px 24px;
+  display:flex;flex-direction:column;gap:16px}
+.panel .top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.kicker{font-size:12px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:var(--acc)}
+.now{margin-top:4px;font-size:30px;font-weight:900;line-height:1.15}
+.over{margin-top:6px;font-size:15px;font-weight:800;color:var(--accdark)}
+.big{flex:0 0 auto;font-size:76px;font-weight:900;line-height:1;letter-spacing:-2px;font-variant-numeric:tabular-nums}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{flex:1 1 200px;min-height:68px;font-size:22px;font-weight:900;border-radius:16px;padding:14px 20px;
+  font-family:inherit;cursor:pointer}
+.btn.sec{color:var(--accdark);background:var(--tint);border:2.5px solid var(--soft)}
+.btn.pri{color:#fff;background:var(--acc);border:2.5px solid var(--acc)}
+.fin{background:var(--acc);border-radius:22px;padding:26px 24px;color:#fff;display:flex;
+  flex-direction:column;gap:16px;align-items:center;text-align:center}
+.fin h2{margin:0;font-size:34px;font-weight:900;line-height:1.1}
+.fin p{margin:0;font-size:17px;font-weight:700}
+.fin .btn{flex:0 0 auto;min-height:60px;font-size:20px;color:var(--accdark);background:#fff;border:none}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:4px}
+.foot span{font-size:14px;font-weight:700;color:var(--muted)}
+.reset{min-height:48px;font-size:15px;font-weight:800;color:var(--muted);background:transparent;
+  border:2px solid var(--soft);border-radius:14px;padding:10px 18px;font-family:inherit;cursor:pointer}
+.hidden{display:none}
+@media (max-width:520px){
+  h1,.clock{font-size:30px}
+  .row{gap:12px;padding:12px 14px;min-height:80px}
+  .circ{width:40px;height:40px;font-size:18px}
+  .lbl{font-size:20px}
+  .big{font-size:60px}
+}
+@media print{.panel,.foot,.bar,.progline,.back{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">‹ Accueil</a>
+  <div class="head">
+    <div>
+      <div class="eyebrow" id="eyebrow">&nbsp;</div>
+      <h1 id="date">&nbsp;</h1>
+    </div>
+    <div class="clockbox">
+      <div class="clocklbl">il est</div>
+      <div class="clock" id="clock">--:--</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="progline"><div class="a" id="prog">&nbsp;</div><div class="b" id="left">&nbsp;</div></div>
+    <div class="bar"><i id="barfill" style="width:0%"></i></div>
+  </div>
+
+  <div class="panel" id="panel">
+    <div class="top">
+      <div>
+        <div class="kicker">Étape en cours</div>
+        <div class="now" id="activeLabel">&nbsp;</div>
+        <div class="over hidden" id="over">Le temps est écoulé — termine tranquillement.</div>
+      </div>
+      <div class="big" id="activeTime">0:00</div>
+    </div>
+    <div class="btns">
+      <button type="button" class="btn sec" id="run">Démarrer</button>
+      <button type="button" class="btn pri" id="done">C'est fait</button>
+    </div>
+  </div>
+
+  <div class="fin hidden" id="fin">
+    <span id="finIcon"></span>
+    <h2 id="finTitle">&nbsp;</h2>
+    <p id="finText">&nbsp;</p>
+    <button type="button" class="btn" id="again">Recommencer</button>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <div class="foot">
+    <span id="motto">&nbsp;</span>
+    <button type="button" class="reset" id="reset">Remettre à zéro</button>
+  </div>
+</div>
+
+<script src="common.js"></script>
+<script>
+(function () {
+  var cfg = R.load();
+  var RID = R.routineId();
+  var RT = cfg.routines[RID];
+  var TASKS = RT.tasks;
+  var KEY = "routine-progress-" + RID;
+  /* Signature des étapes : si les réglages changent, la progression du jour repart à zéro. */
+  var SIG = TASKS.map(function (t) { return t.label + "|" + t.mins; }).join(";");
+
+  R.applyTheme(RT.theme);
+  document.title = RT.title + (cfg.name ? " — " + cfg.name : "");
+
+  function dayKey(d) {
+    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+  }
+  function fresh() {
+    return {
+      day: dayKey(new Date()),
+      sig: SIG,
+      done: TASKS.map(function () { return false; }),
+      left: TASKS.map(function (t) { return t.mins * 60; }),
+      idx: 0,
+      running: false
+    };
+  }
+  function load() {
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      if (!raw) { return null; }
+      var s = JSON.parse(raw);
+      if (!s || s.day !== dayKey(new Date()) || s.sig !== SIG) { return null; }
+      if (!s.left || s.left.length !== TASKS.length) { return null; }
+      s.running = false;
+      return s;
+    } catch (e) { return null; }
+  }
+  function save() {
+    try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  var state = load() || fresh();
+
+  function mmss(n) {
+    var t = n < 0 ? 0 : n;
+    var m = Math.floor(t / 60), s = t % 60;
+    return m + ":" + (s < 10 ? "0" + s : "" + s);
+  }
+
+  var el = {};
+  ["eyebrow","date","clock","prog","left","barfill","list","panel","activeLabel","activeTime",
+   "over","run","done","fin","finIcon","finTitle","finText","again","reset","motto"].forEach(function (id) {
+    el[id] = document.getElementById(id);
+  });
+
+  el.eyebrow.textContent = RT.title;
+  el.motto.textContent = RT.motto;
+  el.finTitle.textContent = RT.endTitle;
+  el.finIcon.innerHTML = R.svg(RT.endIcon, 46);
+
+  var rows = TASKS.map(function (t, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "row";
+    b.innerHTML =
+      '<span class="circ"></span>' +
+      '<span class="mid"><span class="lbl"></span><span class="det"></span></span>' +
+      '<span class="badge"></span>';
+    b.querySelector(".lbl").textContent = t.label;
+    b.querySelector(".det").textContent = t.detail;
+    b.addEventListener("click", function () {
+      state.idx = i; state.running = true; save(); render();
+      el.panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    el.list.appendChild(b);
+    return b;
+  });
+
+  var CHECK = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    + ' stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M5 12.6l4.4 4.4L19 7.4"/></svg>';
+
+  function render() {
+    var now = new Date();
+    var dt = now.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+    el.date.textContent = dt.charAt(0).toUpperCase() + dt.slice(1);
+    var clock = now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    el.clock.textContent = clock;
+
+    var doneCount = 0, secsLeft = 0;
+    for (var i = 0; i < TASKS.length; i++) {
+      if (state.done[i]) { doneCount++; } else { secsLeft += Math.max(0, state.left[i]); }
+    }
+    var allDone = doneCount === TASKS.length;
+
+    el.prog.textContent = doneCount + " / " + TASKS.length + " étapes faites";
+    el.left.textContent = allDone ? "terminé" : "encore " + Math.ceil(secsLeft / 60) + " min";
+    el.barfill.style.width = Math.round((doneCount / TASKS.length) * 100) + "%";
+
+    rows.forEach(function (b, i) {
+      var isDone = !!state.done[i];
+      var isActive = !allDone && i === state.idx && !isDone;
+      b.className = "row" + (isDone ? " done" : "") + (isActive ? " active" : "");
+      b.setAttribute("aria-current", isActive ? "step" : "false");
+      b.querySelector(".circ").innerHTML = isDone ? CHECK : String(i + 1);
+      b.querySelector(".badge").textContent =
+        isDone ? "fait" : (isActive ? mmss(state.left[i]) : TASKS[i].mins + " min");
+    });
+
+    el.panel.className = allDone ? "panel hidden" : "panel";
+    el.fin.className = allDone ? "fin" : "fin hidden";
+
+    if (allDone) {
+      el.finText.textContent = "Il est " + clock + "." + (RT.endText ? " " + RT.endText : "");
+    } else {
+      el.activeLabel.textContent = TASKS[state.idx].label;
+      el.activeTime.textContent = mmss(state.left[state.idx]);
+      el.over.className = state.left[state.idx] <= 0 ? "over" : "over hidden";
+      el.run.textContent = state.running ? "Pause" : "Démarrer";
+    }
+  }
+
+  el.run.addEventListener("click", function () {
+    state.running = !state.running; save(); render();
+  });
+  el.done.addEventListener("click", function () {
+    state.done[state.idx] = true;
+    for (var k = 0; k < state.done.length; k++) {
+      if (!state.done[k]) { state.idx = k; break; }
+    }
+    state.running = false; save(); render();
+  });
+  function reset() { state = fresh(); save(); render(); }
+  el.reset.addEventListener("click", reset);
+  el.again.addEventListener("click", reset);
+
+  setInterval(function () {
+    if (state.day !== dayKey(new Date())) { state = fresh(); }
+    if (state.running && !state.done[state.idx] && state.left[state.idx] > 0) {
+      state.left[state.idx] -= 1;
+      save();
+    }
+    render();
+  }, 1000);
+
+  render();
+})();
+</script>
+</body>
+</html>

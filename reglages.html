@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFF8EE">
+<title>Personnaliser les routines</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap">
+<style>
+:root{--bg:#FFF8EE;--ink:#231B12;--muted:#6B5742;--bord:#EFD9BE;--acc:#B04E0C;--ok:#3F7A68}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif}
+.w{max-width:760px;margin:0 auto;padding:18px 16px 60px;display:flex;flex-direction:column;gap:18px}
+.back{font-size:15px;font-weight:800;color:var(--muted);text-decoration:none;align-self:flex-start;padding:6px 0}
+h1{margin:0;font-size:34px;font-weight:900;line-height:1.1}
+.lead{margin:0;font-size:15px;font-weight:700;color:var(--muted);line-height:1.45}
+.card{background:#fff;border:2px solid var(--bord);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.card h2{margin:0;font-size:22px;font-weight:900}
+label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:900;letter-spacing:.4px;color:var(--muted)}
+input,select,textarea{font:700 16px Nunito,system-ui,sans-serif;color:var(--ink);background:#fff;border:2px solid #E2CDB2;
+  border-radius:10px;padding:9px 11px;box-sizing:border-box;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus{outline:3px solid #F2C79E;border-color:var(--acc)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{font:900 17px Nunito,system-ui,sans-serif;padding:12px 20px;border-radius:14px;border:2.5px solid var(--bord);background:#fff;color:var(--ink);cursor:pointer}
+.tab[aria-selected="true"]{color:#fff;border-color:transparent}
+.task{border:2px solid var(--bord);border-radius:14px;padding:12px;display:grid;
+  grid-template-columns:44px 1fr 84px;grid-template-areas:"ico lbl min" "ico det det" "act act act";gap:8px 10px;align-items:center}
+.task .ico{grid-area:ico;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;align-self:start}
+.task .lbl{grid-area:lbl}.task .det{grid-area:det}.task .min{grid-area:min}
+.task .act{grid-area:act;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.task .act select{flex:1 1 160px;width:auto}
+.sm{font:800 14px Nunito,system-ui,sans-serif;padding:8px 12px;border-radius:10px;border:2px solid #E2CDB2;background:#fff;color:var(--ink);cursor:pointer;min-height:40px}
+.sm:disabled{opacity:.35;cursor:default}
+.sm.del{color:#9B2C2C;border-color:#E9C3C3}
+.btn{font:900 16px Nunito,system-ui,sans-serif;padding:12px 18px;border-radius:12px;cursor:pointer;border:2px solid var(--ink);background:#fff;color:var(--ink);min-height:48px}
+.btn.pri{background:var(--ink);color:#fff}
+.btn.danger{border-color:#9B2C2C;color:#9B2C2C}
+.btn.danger.armed{background:#9B2C2C;color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.status{font-size:14px;font-weight:800;color:var(--ok);min-height:20px}
+.hint{font-size:13px;font-weight:700;color:var(--muted)}
+.total{font-size:15px;font-weight:900}
+#shareOut{font:600 13px ui-monospace,Menlo,monospace}
+.hidden{display:none}
+@media (max-width:520px){.two{grid-template-columns:1fr} h1{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="w">
+  <a class="back" href="index.html">‹ Accueil</a>
+  <h1>Personnaliser</h1>
+  <p class="lead">Les changements sont enregistrés automatiquement sur cet appareil. Les minuteurs et les fiches A4 utilisent ces réglages.</p>
+
+  <div class="card">
+    <label>Prénom de l'enfant (facultatif)
+      <input id="name" maxlength="40" placeholder="ex. Léa" autocomplete="off">
+    </label>
+    <div class="hint">Il s'affiche sur l'accueil et en haut des fiches imprimées.</div>
+  </div>
+
+  <div class="tabs" id="tabs" role="tablist"></div>
+
+  <div class="card" id="editor">
+    <div class="two">
+      <label>Nom court (accueil)<input id="short" maxlength="30"></label>
+      <label>Titre<input id="title" maxlength="60"></label>
+    </div>
+    <div class="two">
+      <label>Couleur<select id="theme"></select></label>
+      <label>Icône de fin<select id="endIcon"></select></label>
+    </div>
+    <label>Phrase d'encouragement (bas de page)<input id="motto" maxlength="120"></label>
+    <div class="two">
+      <label>Message de fin<input id="endTitle" maxlength="60"></label>
+      <label>Petit mot après la fin<input id="endText" maxlength="80"></label>
+    </div>
+
+    <div class="row" style="justify-content:space-between">
+      <h2>Étapes</h2><span class="total" id="total"></span>
+    </div>
+    <div id="tasks" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div class="row"><button type="button" class="btn" id="add">+ Ajouter une étape</button><span class="hint" id="maxHint"></span></div>
+
+    <h2>Règles (fiche A4)</h2>
+    <label>Titre de l'encadré<input id="rulesTitle" maxlength="60"></label>
+    <label>Une règle par ligne. Le début avant « : » est mis en gras.
+      <textarea id="rules" rows="4"></textarea>
+    </label>
+    <div class="row"><a class="btn" id="preview" href="#">Voir la fiche A4</a><a class="btn" id="try" href="#">Essayer le minuteur</a></div>
+  </div>
+
+  <div class="card">
+    <h2>Utiliser sur un autre appareil</h2>
+    <p class="lead">Créez un lien qui contient vos routines, puis ouvrez-le sur la tablette ou le téléphone de l'enfant. Le contenu est dans le lien lui-même : il n'est stocké nulle part ailleurs.</p>
+    <div class="row"><button type="button" class="btn pri" id="share">Créer le lien</button><span class="status" id="shareStatus"></span></div>
+    <textarea id="shareOut" class="hidden" rows="3" readonly></textarea>
+  </div>
+
+  <div class="card">
+    <h2>Recommencer à zéro</h2>
+    <p class="lead">Remet les routines d'exemple et efface le prénom.</p>
+    <div class="row"><button type="button" class="btn danger" id="reset">Rétablir les routines d'exemple</button></div>
+  </div>
+  <div class="status" id="status" aria-live="polite"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  var cfg = R.load();
+  var cur = cfg.order[0];
+  var statusTimer;
+
+  function persist() {
+    var ok = R.save(cfg);
+    $("status").textContent = ok ? "Enregistré ✓" : "Impossible d'enregistrer (navigation privée ?)";
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(function () { $("status").textContent = ""; }, 1500);
+    $("total").textContent = "Total : " + R.total(cfg.routines[cur].tasks);
+  }
+
+  function opt(sel, value, text) {
+    var o = document.createElement("option"); o.value = value; o.textContent = text; sel.appendChild(o);
+  }
+  Object.keys(R.THEMES).forEach(function (k) { opt($("theme"), k, R.THEMES[k].n); });
+  Object.keys(R.ICONS).forEach(function (k) { opt($("endIcon"), k, R.ICONS[k].n); });
+
+  function renderTabs() {
+    $("tabs").innerHTML = "";
+    cfg.order.forEach(function (id) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "tab"; b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", id === cur ? "true" : "false");
+      b.textContent = cfg.routines[id].short;
+      if (id === cur) { b.style.background = R.THEMES[cfg.routines[id].theme].acc; }
+      b.addEventListener("click", function () { cur = id; renderAll(); });
+      $("tabs").appendChild(b);
+    });
+  }
+
+  var FIELDS = ["short", "title", "theme", "endIcon", "motto", "endTitle", "endText", "rulesTitle"];
+  FIELDS.forEach(function (f) {
+    $(f).addEventListener("input", function () {
+      var v = $(f).value;
+      if ((f === "short" || f === "title" || f === "endTitle") && !v.trim()) { return; }
+      cfg.routines[cur][f] = v;
+      persist();
+      if (f === "short" || f === "theme") { renderTabs(); }
+      if (f === "theme") { renderTasks(); }
+    });
+  });
+
+  $("rules").addEventListener("input", function () {
+    cfg.routines[cur].rules = $("rules").value.split("\n").map(function (line) {
+      line = line.trim();
+      var i = line.indexOf(":");
+      return i > 0 ? [line.slice(0, i).trim(), line.slice(i + 1).trim()] : ["", line];
+    }).filter(function (r) { return r[0] || r[1]; }).slice(0, 5);
+    persist();
+  });
+
+  $("name").addEventListener("input", function () { cfg.name = $("name").value.trim(); persist(); });
+
+  function renderTasks() {
+    var rt = cfg.routines[cur], th = R.THEMES[rt.theme];
+    var box = $("tasks");
+    box.innerHTML = "";
+    rt.tasks.forEach(function (t, i) {
+      var d = document.createElement("div"); d.className = "task";
+      d.innerHTML =
+        '<div class="ico"></div>' +
+        '<input class="lbl" maxlength="60" aria-label="Étape ' + (i + 1) + '" placeholder="Nom de l\'étape">' +
+        '<label class="min" style="flex-direction:row;align-items:center;gap:6px"><input type="number" min="1" max="120" inputmode="numeric" aria-label="Durée en minutes"><span>min</span></label>' +
+        '<input class="det" maxlength="100" placeholder="Petite précision (facultatif)" aria-label="Précision">' +
+        '<div class="act"><select aria-label="Icône"></select>' +
+        '<button type="button" class="sm up" aria-label="Monter">↑</button>' +
+        '<button type="button" class="sm down" aria-label="Descendre">↓</button>' +
+        '<button type="button" class="sm del">Supprimer</button></div>';
+      var ico = d.querySelector(".ico");
+      ico.style.background = th.tint; ico.style.color = th.acc;
+      ico.innerHTML = R.svg(t.icon, 26);
+      var lbl = d.querySelector(".lbl"), det = d.querySelector(".det"),
+          min = d.querySelector('input[type="number"]'), sel = d.querySelector("select");
+      lbl.value = t.label; det.value = t.detail; min.value = t.mins;
+      Object.keys(R.ICONS).forEach(function (k) { opt(sel, k, R.ICONS[k].n); });
+      sel.value = t.icon;
+      lbl.addEventListener("input", function () { if (lbl.value.trim()) { t.label = lbl.value; persist(); } });
+      det.addEventListener("input", function () { t.detail = det.value; persist(); });
+      min.addEventListener("input", function () {
+        var n = Math.round(Number(min.value));
+        if (n >= 1 && n <= 120) { t.mins = n; persist(); }
+      });
+      sel.addEventListener("change", function () { t.icon = sel.value; ico.innerHTML = R.svg(t.icon, 26); persist(); });
+      var up = d.querySelector(".up"), down = d.querySelector(".down"), del = d.querySelector(".del");
+      up.disabled = i === 0; down.disabled = i === rt.tasks.length - 1; del.disabled = rt.tasks.length === 1;
+      up.addEventListener("click", function () { move(i, -1); });
+      down.addEventListener("click", function () { move(i, 1); });
+      del.addEventListener("click", function () { rt.tasks.splice(i, 1); persist(); renderTasks(); });
+      box.appendChild(d);
+    });
+    $("add").disabled = rt.tasks.length >= R.MAX_TASKS;
+    $("maxHint").textContent = rt.tasks.length >= R.MAX_TASKS ? R.MAX_TASKS + " étapes maximum" : "";
+    $("total").textContent = "Total : " + R.total(rt.tasks);
+  }
+  function move(i, dir) {
+    var a = cfg.routines[cur].tasks, j = i + dir;
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    persist(); renderTasks();
+  }
+  $("add").addEventListener("click", function () {
+    cfg.routines[cur].tasks.push({ label: "Nouvelle étape", detail: "", mins: 5, icon: "etoile" });
+    persist(); renderTasks();
+    var inputs = $("tasks").querySelectorAll(".lbl");
+    var last = inputs[inputs.length - 1]; last.focus(); last.select();
+  });
+
+  function renderAll() {
+    var rt = cfg.routines[cur];
+    $("name").value = cfg.name;
+    FIELDS.forEach(function (f) { $(f).value = rt[f]; });
+    $("rules").value = rt.rules.map(function (r) { return r[0] ? r[0] + " : " + r[1] : r[1]; }).join("\n");
+    $("preview").href = "fiche.html?r=" + cur;
+    $("try").href = "routine.html?r=" + cur;
+    renderTabs(); renderTasks();
+  }
+  renderAll();
+
+  $("share").addEventListener("click", function () {
+    var url = new URL("index.html", window.location.href);
+    url.hash = "config=" + R.encode(cfg);
+    var out = $("shareOut");
+    out.value = url.toString(); out.classList.remove("hidden"); out.select();
+    var done = function (ok) { $("shareStatus").textContent = ok ? "Lien copié ✓" : "Copiez le lien ci-dessous"; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(out.value).then(function () { done(true); }, function () { done(false); });
+    } else { done(false); }
+  });
+
+  /* Double appui pour confirmer, sans boîte de dialogue. */
+  var armTimer;
+  $("reset").addEventListener("click", function () {
+    var b = $("reset");
+    if (!b.classList.contains("armed")) {
+      b.classList.add("armed"); b.textContent = "Appuyez encore pour confirmer";
+      armTimer = setTimeout(function () { b.classList.remove("armed"); b.textContent = "Rétablir les routines d'exemple"; }, 4000);
+      return;
+    }
+    clearTimeout(armTimer);
+    b.classList.remove("armed"); b.textContent = "Rétablir les routines d'exemple";
+    cfg = R.reset(); cur = cfg.order[0]; renderAll();
+    $("status").textContent = "Routines d'exemple rétablies ✓";
+  });
+})();
+</script>
+</body>
+</html>

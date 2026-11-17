@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiche à imprimer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap">
+<style>
+@page { size: A4; margin: 0; }
+:root{ --bg:#FFF8EE; --ink:#231B12; --acc:#B04E0C; --accdark:#8A3D08; --muted:#6B5742; --tint:#FDEBD8; --bord:#EFD9BE; --soft:#E0BE94; --box:#CBB393; }
+html,body{margin:0;background:#e9e5de;font-family:Nunito,system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.tools{max-width:794px;margin:0 auto;padding:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;box-sizing:border-box}
+.tools a,.tools button{font:800 15px Nunito,system-ui,sans-serif;padding:10px 16px;border-radius:12px;border:2px solid #c9bfae;background:#fff;color:#231B12;text-decoration:none;cursor:pointer}
+.tools button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.tools span{font-size:13px;font-weight:700;color:#5c5245}
+.scaler{overflow:hidden;margin:0 auto 24px}
+.page{width:794px;height:1123px;box-sizing:border-box;padding:44px;background:var(--bg);color:var(--ink);
+  display:flex;flex-direction:column;gap:18px;transform-origin:top left;overflow:hidden}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--acc);min-height:16px}
+h1{margin:4px 0 0;font-size:46px;font-weight:900;line-height:1.02;text-wrap:balance}
+.motto{margin-top:6px;font-size:15px;font-weight:700;color:var(--muted)}
+.pill{flex:0 0 auto;background:var(--tint);border:2px solid var(--bord);border-radius:999px;padding:10px 18px;text-align:center;color:var(--accdark)}
+.pill small{display:block;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+.pill b{font-size:22px;font-weight:900}
+.days{display:flex;align-items:flex-end;gap:12px}
+.days .h{flex:1 1 auto;font-size:13px;font-weight:700;color:var(--muted)}
+.cols{flex:0 0 auto;display:flex;gap:9px}
+.cols div{width:30px;text-align:center;font-size:13px;font-weight:900;color:var(--muted)}
+.list{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:10px}
+.row{flex:1 1 0;max-height:86px;min-height:0;box-sizing:border-box;display:flex;align-items:center;gap:14px;
+  background:#fff;border:2px solid var(--bord);border-radius:16px;padding:0 16px}
+.num{flex:0 0 auto;width:32px;height:32px;border-radius:999px;background:var(--acc);color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.ico{flex:0 0 auto;width:46px;height:46px;border-radius:13px;background:var(--tint);color:var(--acc);display:flex;align-items:center;justify-content:center}
+.txt{flex:1 1 auto;min-width:0}
+.lbl{font-size:21px;font-weight:800;line-height:1.15}
+.det{margin-top:3px;font-size:13px;font-weight:700;color:var(--muted)}
+.boxes{flex:0 0 auto;display:flex;gap:9px}
+.boxes div{width:30px;height:30px;box-sizing:border-box;border:2.5px solid var(--box);border-radius:8px;background:#fff}
+.end{flex:0 0 58px;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--acc);border-radius:16px;color:#fff;font-size:24px;font-weight:900}
+.rules{flex:0 0 auto;background:#fff;border:2.5px dashed var(--soft);border-radius:16px;padding:16px 20px}
+.rules .t{font-size:12px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:var(--acc)}
+.rules .l{margin-top:10px;display:flex;flex-direction:column;gap:7px}
+.rules .l div{font-size:15px;font-weight:700;line-height:1.35}
+.rules b{font-weight:900}
+.compact .lbl{font-size:18px}
+.compact .det{font-size:12px;margin-top:1px}
+.compact .ico{width:38px;height:38px}
+.compact .ico svg{width:22px;height:22px}
+.compact .num{width:28px;height:28px;font-size:14px}
+.compact .list{gap:7px}
+@media print{
+  html,body{background:#fff}
+  .tools{display:none}
+  .scaler{margin:0;width:auto!important;height:auto!important}
+  .page{transform:none!important}
+}
+</style>
+</head>
+<body>
+<div class="tools">
+  <a href="index.html">‹ Accueil</a>
+  <button type="button" class="pri" id="print">Imprimer</button>
+  <span>Format A4, marges « aucune » de préférence.</span>
+</div>
+<div class="scaler" id="scaler">
+  <div class="page" id="page">
+    <div class="top">
+      <div>
+        <div class="eyebrow" id="eyebrow"></div>
+        <h1 id="title"></h1>
+        <div class="motto" id="motto"></div>
+      </div>
+      <div class="pill"><small>en tout</small><b id="total"></b></div>
+    </div>
+    <div class="days">
+      <div class="h">Je coche moi-même quand c'est fait &rarr;</div>
+      <div class="cols"><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div></div>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="rules" id="rules"><div class="t" id="rulesTitle"></div><div class="l" id="rulesList"></div></div>
+  </div>
+</div>
+<script src="common.js"></script>
+<script>
+(function () {
+  var cfg = R.load();
+  var RT = cfg.routines[R.routineId()];
+  R.applyTheme(RT.theme);
+  document.title = RT.title + " — fiche A4";
+
+  function $(id) { return document.getElementById(id); }
+  function div(cls, text) { var d = document.createElement("div"); if (cls) { d.className = cls; } if (text != null) { d.textContent = text; } return d; }
+
+  $("eyebrow").textContent = cfg.name || "";
+  $("title").textContent = RT.title;
+  $("motto").textContent = RT.motto;
+  $("total").textContent = R.total(RT.tasks);
+
+  var list = $("list");
+  RT.tasks.forEach(function (t, i) {
+    var row = div("row");
+    row.appendChild(div("num", String(i + 1)));
+    var ico = div("ico"); ico.innerHTML = R.svg(t.icon, 28); row.appendChild(ico);
+    var txt = div("txt");
+    txt.appendChild(div("lbl", t.label));
+    txt.appendChild(div("det", t.mins + " min" + (t.detail ? " · " + t.detail : "")));
+    row.appendChild(txt);
+    var boxes = div("boxes");
+    for (var k = 0; k < 5; k++) { boxes.appendChild(div()); }
+    row.appendChild(boxes);
+    list.appendChild(row);
+  });
+  var end = div("end");
+  end.innerHTML = R.svg(RT.endIcon, 28);
+  end.appendChild(document.createTextNode(RT.endTitle));
+  list.appendChild(end);
+
+  if (RT.tasks.length > 8) { $("page").classList.add("compact"); }
+
+  if (RT.rules.length) {
+    $("rulesTitle").textContent = RT.rulesTitle;
+    RT.rules.forEach(function (r) {
+      var d = div();
+      if (r[0]) { var b = document.createElement("b"); b.textContent = r[0] + (r[1] ? " : " : ""); d.appendChild(b); }
+      if (r[1]) { d.appendChild(document.createTextNode(r[1])); }
+      $("rulesList").appendChild(d);
+    });
+  } else {
+    $("rules").style.display = "none";
+  }
+
+  /* Aperçu à l'écran : on réduit la page pour qu'elle tienne sur un téléphone. */
+  function fit() {
+    var w = Math.min(794, document.documentElement.clientWidth - 16);
+    var s = w / 794;
+    $("page").style.transform = "scale(" + s + ")";
+    $("scaler").style.width = (794 * s) + "px";
+    $("scaler").style.height = (1123 * s) + "px";
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  $("print").addEventListener("click", function () { window.print(); });
+})();
+</script>
+</body>
+</html>
