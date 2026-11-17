@@ -25,3 +25,9 @@ Ce sont des fichiers statiques : tout hébergeur statique convient.
 - **Netlify Drop** : glisser le dossier sur https://app.netlify.com/drop
 - **GitHub Pages** : pousser le dossier dans un dépôt, puis Settings → Pages
 - **Test local** : `python3 -m http.server` dans ce dossier
+
+## Appli installable (PWA)
+
+- `manifest.webmanifest` + `icons/` : installation sur l'écran d'accueil (Android, iPad, ordinateur).
+- `sw.js` : fonctionnement hors ligne. Les fichiers sont servis depuis le cache puis mis à jour en arrière-plan : une nouvelle version apparaît **au lancement suivant**.
+- Si vous ajoutez ou renommez un fichier, ajoutez-le à `FILES` dans `sw.js` et changez `VERSION`.
