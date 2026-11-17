@@ -74,6 +74,9 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
 .foot span{font-size:14px;font-weight:700;color:var(--muted)}
 .reset{min-height:48px;font-size:15px;font-weight:800;color:var(--muted);background:transparent;
   border:2px solid var(--soft);border-radius:14px;padding:10px 18px;font-family:inherit;cursor:pointer}
+.fin .cheer{display:block;background:#FFF4E2;border-radius:50%;padding:10px;animation:cheer 1.6s ease-in-out infinite}
+@keyframes cheer{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-10px) rotate(-8deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-10px) rotate(8deg)}}
+@media (prefers-reduced-motion:reduce){.fin .cheer{animation:none}}
 .hidden{display:none}
 @media (max-width:520px){
   h1,.clock{font-size:30px}
@@ -85,6 +88,7 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
 @media print{.panel,.foot,.bar,.progline,.back{display:none}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="Routines">
@@ -197,7 +201,7 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
   el.eyebrow.textContent = RT.title;
   el.motto.textContent = RT.motto;
   el.finTitle.textContent = RT.endTitle;
-  el.finIcon.innerHTML = R.svg(RT.endIcon, 46);
+  el.finIcon.innerHTML = '<img src="icons/logo.svg" width="110" height="110" alt="" class="cheer">';
 
   var rows = TASKS.map(function (t, i) {
     var b = document.createElement("button");

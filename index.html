@@ -21,10 +21,18 @@ body{background:
 
 /* Décor */
 .deco{position:absolute;pointer-events:none;color:var(--sun);opacity:.9}
-.deco.d1{top:22px;right:20px;animation:float 5s ease-in-out infinite}
-.deco.d2{top:120px;right:84px;color:#9AA8DA;animation:float 6s ease-in-out -2s infinite}
-.deco.d3{top:6px;right:120px;color:#F19A6B;animation:float 7s ease-in-out -4s infinite}
+.deco.d2{top:200px;right:20px;color:#9AA8DA;animation:float 6s ease-in-out -2s infinite}
+.deco.d3{top:30px;right:150px;color:#F19A6B;animation:float 7s ease-in-out -4s infinite}
 @keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(10deg)}}
+
+.brand{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:900;letter-spacing:.3px;color:#8A3D08}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mascot{flex:0 0 auto;width:112px;height:112px;animation:bob 3.2s ease-in-out infinite;cursor:pointer;
+  filter:drop-shadow(0 6px 0 rgba(138,61,8,.12))}
+.mascot.jump{animation:jump .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-6px) rotate(4deg)}}
+@keyframes jump{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-26px) scale(1.08) rotate(-12deg)}70%{transform:translateY(0) scale(.95)}100%{transform:translateY(0) scale(1)}}
+@media (max-width:460px){.mascot{width:84px;height:84px}}
 
 .hello{font-size:20px;font-weight:900;color:var(--muted)}
 h1{margin:2px 0 0;font-size:44px;font-weight:900;line-height:1.02;text-wrap:balance;max-width:14ch}
@@ -93,6 +101,7 @@ details p{margin:10px 0 0;font-size:15px;font-weight:700;line-height:1.5;color:#
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="Routines">
@@ -101,7 +110,6 @@ details p{margin:10px 0 0;font-size:15px;font-weight:700;line-height:1.5;color:#
 </head>
 <body>
 <div class="w">
-  <svg class="deco d1" width="34" height="34" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.3 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.3 6.1-.7z"/></svg>
   <svg class="deco d2" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.3 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.3 6.1-.7z"/></svg>
   <svg class="deco d3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>
 
@@ -113,9 +121,14 @@ details p{margin:10px 0 0;font-size:15px;font-weight:700;line-height:1.5;color:#
     </div>
   </div>
 
-  <div>
-    <div class="hello" id="hello">&nbsp;</div>
-    <h1 id="h1">&nbsp;</h1>
+  <div class="brand"><img src="icons/logo.svg" width="30" height="30" alt="">Mes routines</div>
+
+  <div class="top">
+    <div>
+      <div class="hello" id="hello">&nbsp;</div>
+      <h1 id="h1">&nbsp;</h1>
+    </div>
+    <img class="mascot" id="mascot" src="icons/logo.svg" width="112" height="112" alt="">
   </div>
 
   <div class="cards" id="cards"></div>
@@ -234,6 +247,15 @@ details p{margin:10px 0 0;font-size:15px;font-weight:700;line-height:1.5;color:#
     $("cheer").textContent = allDone ? "Matin et soir : tout est fait aujourd'hui. Champion·ne ! 🌟" : "Une étape à la fois, tu vas y arriver ✨";
   }
   render();
+
+  /* La mascotte saute quand on la touche. */
+  $("mascot").addEventListener("click", function () {
+    var m = $("mascot");
+    m.classList.remove("jump"); void m.offsetWidth; m.classList.add("jump");
+  });
+  $("mascot").addEventListener("animationend", function (e) {
+    if (e.animationName === "jump") { $("mascot").classList.remove("jump"); }
+  });
 
   /* Import depuis un lien de partage : index.html#config=... */
   var m = window.location.hash.match(/[#&]config=([A-Za-z0-9_-]+)/);
