@@ -84,6 +84,10 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
 }
 @media print{.panel,.foot,.bar,.progline,.back{display:none}}
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Routines">
 </head>
 <body>
 <div class="wrap">
@@ -271,7 +275,25 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
   el.reset.addEventListener("click", reset);
   el.again.addEventListener("click", reset);
 
+  /* L'écran reste allumé tant que le chrono tourne (tablette posée sur la table). */
+  var wake = null, wakePending = false;
+  function syncWake() {
+    if (!("wakeLock" in navigator)) { return; }
+    var want = state.running && !document.hidden && state.done.indexOf(false) !== -1;
+    if (want && !wake && !wakePending) {
+      wakePending = true;
+      navigator.wakeLock.request("screen").then(function (l) {
+        wake = l; wakePending = false;
+        l.addEventListener("release", function () { if (wake === l) { wake = null; } });
+      }).catch(function () { wakePending = false; });
+    } else if (!want && wake) {
+      wake.release().catch(function () {}); wake = null;
+    }
+  }
+  document.addEventListener("visibilitychange", syncWake);
+
   setInterval(function () {
+    syncWake();
     if (state.day !== dayKey(new Date())) { state = fresh(); }
     if (state.running && !state.done[state.idx] && state.left[state.idx] > 0) {
       state.left[state.idx] -= 1;

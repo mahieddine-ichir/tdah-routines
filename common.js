@@ -193,7 +193,19 @@ var R = (function () {
     return DEFAULTS.routines[id] ? id : "matin";
   }
 
+  /* Mode hors ligne / installable. */
+  if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+
+  function isStandalone() {
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  }
+
   return {
+    isStandalone: isStandalone,
     ICONS: ICONS, THEMES: THEMES, DEFAULTS: DEFAULTS, MAX_TASKS: MAX_TASKS,
     load: load, save: save, reset: reset, sanitize: sanitize, encode: encode, decode: decode,
     svg: svg, applyTheme: applyTheme, total: total, routineId: routineId, clone: clone

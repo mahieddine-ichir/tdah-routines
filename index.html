@@ -73,6 +73,14 @@ details p{margin:10px 0 0;font-size:15px;font-weight:700;line-height:1.5;color:#
 .banner button{font:900 16px Nunito,system-ui,sans-serif;padding:12px 18px;border-radius:12px;cursor:pointer;border:2px solid var(--ok)}
 .banner .yes{background:var(--ok);color:#fff}
 .banner .no{background:#fff;color:#35604F}
+.install{background:#fff;border:2.5px solid var(--bord);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.install .it{display:flex;align-items:center;gap:14px}
+.install img{border-radius:14px;flex:0 0 auto}
+.install b{display:block;font-size:17px;font-weight:900}
+.install span{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-top:2px}
+.install .ib{font:900 17px Nunito,system-ui,sans-serif;min-height:52px;border-radius:14px;border:none;background:#B04E0C;color:#fff;cursor:pointer}
+.install ol,.install p{margin:0;padding-left:22px;font-size:15px;font-weight:700;line-height:1.55;color:#4a3d2e}
+.install p{padding-left:0}
 .hidden{display:none}
 
 @media (max-width:460px){
@@ -84,6 +92,12 @@ details p{margin:10px 0 0;font-size:15px;font-weight:700;line-height:1.5;color:#
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Routines">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 <div class="w">
@@ -110,6 +124,19 @@ details p{margin:10px 0 0;font-size:15px;font-weight:700;line-height:1.5;color:#
   <div class="parents">
     <div class="sub">Pour les parents</div>
     <div class="links" id="links"><a href="reglages.html">Personnaliser</a></div>
+    <div class="install hidden" id="install">
+      <div class="it">
+        <img src="icons/icon-192.png" width="52" height="52" alt="">
+        <div><b>Installer sur la tablette</b><span id="installText">Une icône sur l'écran d'accueil, en plein écran, même sans internet.</span></div>
+      </div>
+      <button type="button" class="ib hidden" id="installBtn">Installer</button>
+      <ol class="ios hidden" id="installIos">
+        <li>Ouvrez cette page dans <b>Safari</b>.</li>
+        <li>Touchez le bouton <b>Partager</b> <span aria-hidden="true">(carré avec une flèche ↑)</span>.</li>
+        <li>Choisissez <b>« Sur l'écran d'accueil »</b>, puis <b>Ajouter</b>.</li>
+      </ol>
+      <p class="ios hidden" id="installOther">Dans le menu du navigateur (⋮), choisissez <b>« Installer l'application »</b> ou <b>« Ajouter à l'écran d'accueil »</b>.</p>
+    </div>
     <details>
       <summary>Comment ça marche ?</summary>
       <p>Chaque routine montre <b>une seule étape à la fois</b> avec un minuteur visible. L'enfant appuie sur « Démarrer », puis sur « C'est fait » pour passer à la suite. C'est le chrono qui donne le rythme, pas l'adulte : moins de rappels, moins de conflits.</p>
@@ -229,6 +256,26 @@ details p{margin:10px 0 0;font-size:15px;font-weight:700;line-height:1.5;color:#
   /* Revenir sur l'onglet met à jour l'avancement et la routine du moment. */
   document.addEventListener("visibilitychange", function () { if (!document.hidden) { render(); } });
   window.addEventListener("pageshow", function (e) { if (e.persisted) { cfg = R.load(); render(); } });
+
+  /* Installation : bouton natif (Chrome/Edge/Android), sinon instructions (iPad/iPhone, autres). */
+  if (!R.isStandalone()) {
+    var ua = navigator.userAgent;
+    var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var deferred = null;
+    $("install").classList.remove("hidden");
+    $(isIOS ? "installIos" : "installOther").classList.remove("hidden");
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault(); deferred = e;
+      $("installBtn").classList.remove("hidden");
+      $("installOther").classList.add("hidden");
+    });
+    $("installBtn").addEventListener("click", function () {
+      if (!deferred) { return; }
+      deferred.prompt();
+      deferred.userChoice.then(function () { deferred = null; $("installBtn").classList.add("hidden"); });
+    });
+    window.addEventListener("appinstalled", function () { $("install").classList.add("hidden"); });
+  }
 })();
 </script>
 </body>
