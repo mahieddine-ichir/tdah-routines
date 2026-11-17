@@ -2,10 +2,10 @@
    Stratégie « stale-while-revalidate » : on répond tout de suite depuis le cache,
    puis on met le cache à jour en arrière-plan (la nouvelle version s'affiche au lancement suivant).
    Changer VERSION force le rechargement complet des fichiers. */
-var VERSION = "v1";
+var VERSION = "v2";
 var CACHE = "routines-" + VERSION;
 var FILES = [
-  "./", "index.html", "routine.html", "fiche.html", "reglages.html", "common.js",
+  "./", "index.html", "routine.html", "fiche.html", "reglages.html", "tdah.html", "common.js",
   "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png",
   "icons/apple-touch-icon.png", "icons/favicon-32.png"
 ];
