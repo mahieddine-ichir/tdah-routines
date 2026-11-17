@@ -1,5 +1,7 @@
 # Routines visuelles (matin / soir)
 
+**En ligne : https://routines.kalky.org**
+
 Petite appli web gratuite qui aide les enfants (TDAH ou non) à suivre leurs routines, une étape à la fois, avec un minuteur visible. Les fiches A4 à imprimer sont fournies.
 
 - **Sans compte ni serveur** : les réglages restent dans le navigateur (`localStorage`).
