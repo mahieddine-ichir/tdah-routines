@@ -77,6 +77,10 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
 .fin .cheer{display:block;background:#FFF4E2;border-radius:50%;padding:10px;animation:cheer 1.6s ease-in-out infinite}
 @keyframes cheer{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-10px) rotate(-8deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-10px) rotate(8deg)}}
 @media (prefers-reduced-motion:reduce){.fin .cheer{animation:none}}
+.snd{min-height:48px;font-size:15px;font-weight:800;color:var(--muted);background:transparent;
+  border:2px solid var(--soft);border-radius:14px;padding:10px 14px;font-family:inherit;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px}
+.snd svg{display:block}
 .hidden{display:none}
 @media (max-width:520px){
   h1,.clock{font-size:30px}
@@ -95,7 +99,10 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="index.html">‹ Accueil</a>
+  <div class="foot" style="padding:0">
+    <a class="back" href="index.html">‹ Accueil</a>
+    <button type="button" class="snd" id="snd" aria-pressed="true"></button>
+  </div>
   <div class="head">
     <div>
       <div class="eyebrow" id="eyebrow">&nbsp;</div>
@@ -194,7 +201,7 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
 
   var el = {};
   ["eyebrow","date","clock","prog","left","barfill","list","panel","activeLabel","activeTime",
-   "over","run","done","fin","finIcon","finTitle","finText","again","reset","motto"].forEach(function (id) {
+   "over","run","done","fin","finIcon","finTitle","finText","again","reset","motto","snd"].forEach(function (id) {
     el[id] = document.getElementById(id);
   });
 
@@ -220,6 +227,67 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
     el.list.appendChild(b);
     return b;
   });
+
+  /* Sons synthétisés (Web Audio) : rien à télécharger, fonctionne hors ligne.
+     Le navigateur exige un premier toucher avant de jouer un son : on « débloque » au premier clic. */
+  var SKEY = "routine-sound";
+  var soundOn = true;
+  try { soundOn = window.localStorage.getItem(SKEY) !== "off"; } catch (e) {}
+  var actx = null;
+  function audio() {
+    if (!actx) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { return null; }
+      try { actx = new AC(); } catch (e) { return null; }
+    }
+    if (actx.state === "suspended") { actx.resume().catch(function () {}); }
+    return actx;
+  }
+  document.addEventListener("pointerdown", audio, { once: true });
+  function tone(freq, start, dur, vol, type) {
+    var c = actx, t = c.currentTime + start;
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = type || "sine";
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+  var SOUNDS = {
+    /* Temps écoulé : carillon doux, joué deux fois. */
+    timeup: function () {
+      [0, 1.1].forEach(function (d) {
+        tone(784, d, 0.9, 0.35); tone(659, d + 0.22, 0.9, 0.35); tone(523, d + 0.44, 1.3, 0.35);
+      });
+    },
+    /* Étape faite : petit « ding » qui monte. */
+    step: function () { tone(880, 0, 0.35, 0.3); tone(1319, 0.09, 0.5, 0.25); },
+    /* Routine terminée : petite fanfare. */
+    finish: function () {
+      [523, 659, 784].forEach(function (f, i) { tone(f, i * 0.14, 0.4, 0.3, "triangle"); });
+      tone(1047, 0.42, 1.2, 0.32, "triangle"); tone(784, 0.42, 1.2, 0.18); tone(1319, 0.56, 1.0, 0.2);
+    }
+  };
+  function play(name) {
+    if (!soundOn || !audio()) { return; }
+    try { SOUNDS[name](); } catch (e) {}
+  }
+  var BELL = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"'
+    + ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/>'
+    + '<path d="M10 20.5a2 2 0 0 0 4 0"/>';
+  function renderSnd() {
+    el.snd.innerHTML = BELL + (soundOn ? '</svg>Son activé' : '<path d="M3 3l18 18"/></svg>Son coupé');
+    el.snd.setAttribute("aria-pressed", soundOn ? "true" : "false");
+  }
+  el.snd.addEventListener("click", function () {
+    soundOn = !soundOn;
+    try { window.localStorage.setItem(SKEY, soundOn ? "on" : "off"); } catch (e) {}
+    renderSnd();
+    play("step");
+  });
+  renderSnd();
 
   var CHECK = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
     + ' stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
@@ -270,6 +338,7 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
   });
   el.done.addEventListener("click", function () {
     state.done[state.idx] = true;
+    play(state.done.indexOf(false) === -1 ? "finish" : "step");
     for (var k = 0; k < state.done.length; k++) {
       if (!state.done[k]) { state.idx = k; break; }
     }
@@ -302,6 +371,10 @@ h1{margin:2px 0 0;font-size:38px;font-weight:900;line-height:1.05;text-wrap:bala
     if (state.running && !state.done[state.idx] && state.left[state.idx] > 0) {
       state.left[state.idx] -= 1;
       save();
+      if (state.left[state.idx] === 0) {
+        play("timeup");
+        if (soundOn && navigator.vibrate) { navigator.vibrate([300, 150, 300]); }
+      }
     }
     render();
   }, 1000);

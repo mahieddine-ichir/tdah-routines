@@ -6,6 +6,7 @@ Petite appli web gratuite qui aide les enfants (TDAH ou non) à suivre leurs rou
 
 - **Sans compte ni serveur** : les réglages restent dans le navigateur (`localStorage`).
 - **Personnalisable** : prénom, étapes, durées, icônes, couleurs, règles (`reglages.html`).
+- **Signaux sonores** : carillon doux quand le temps d'une étape est écoulé (et vibration sur téléphone), « ding » à chaque étape faite, petite fanfare à la fin. Bouton « Son activé / coupé » en haut de l'écran de routine (sons synthétisés, sans fichier audio).
 - **Lien de partage** : la configuration est encodée dans le `#fragment` de l'URL. Elle n'est jamais envoyée au serveur.
 
 ## Fichiers
